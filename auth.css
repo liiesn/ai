@@ -231,13 +231,18 @@
     z-index: 1;
 }
 
+.info-header {
+    display: flex;
+    flex-direction: row;
+}
+
 .info-logo {
     margin-bottom: 25px;
     color: var(--accent-primary);
     opacity: 0.9;
 }
 
-.info-content h2 {
+.info-header h2 {
     font-size: 1.6em;
     font-weight: 600;
     margin-bottom: 15px;
