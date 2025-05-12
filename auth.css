@@ -2,18 +2,18 @@
 
 /* Apply styles to the page wrapper when auth is active */
 #auth-page {
-    display: flex; /* Use flex to center the auth-wrapper */
+    display: flex;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
     width: 100%;
-    background-color: var(--bg-primary); /* Ensure page background matches theme */
-    position: fixed; /* Cover the whole screen */
+    background-color: var(--bg-primary);
+    position: fixed;
     top: 0;
     left: 0;
-    z-index: 2000; /* Ensure it's above the app container */
-    opacity: 0; /* Start hidden for transition */
-    pointer-events: none; /* Allow clicks through when hidden */
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: none;
     transition: opacity 0.3s ease-in-out;
 }
 
@@ -25,10 +25,10 @@
 .auth-wrapper {
     display: flex;
     width: 90%;
-    max-width: 880px; /* Slightly smaller max width */
+    max-width: 880px;
     background-color: var(--bg-secondary);
-    border-radius: var(--border-radius-md);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12); /* Softer, more spread shadow */
+    border-radius: 20px; /* More rounded corners like Apple */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
     overflow: hidden;
     border: 1px solid var(--border-color-primary);
 }
@@ -48,22 +48,22 @@
 
 .auth-form-container {
     width: 100%;
-    max-width: 340px; /* Slightly narrower for better readability */
+    max-width: 340px;
     margin: 0 auto;
 }
 
 .auth-header {
     text-align: center;
     color: var(--text-primary);
-    font-size: 1.8em; /* Slightly smaller */
+    font-size: 1.8em;
     font-weight: 600;
     margin-bottom: 12px;
-    letter-spacing: -0.02em; /* Apple-like typography */
+    letter-spacing: -0.02em;
 }
 
 .auth-form h3 {
     color: var(--text-secondary);
-    font-size: 1em; /* Smaller subtitle */
+    font-size: 1em;
     font-weight: 500;
     margin-bottom: 28px;
     text-align: center;
@@ -95,11 +95,11 @@
     padding: 12px 15px;
     background-color: var(--bg-input);
     border: 1px solid var(--border-color-primary);
-    border-radius: var(--border-radius);
+    border-radius: 12px; /* More rounded corners */
     color: var(--text-primary);
     font-size: 0.95em;
     box-sizing: border-box;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .auth-form input[type="text"]::placeholder,
@@ -114,7 +114,7 @@
 .auth-form input[type="email"]:focus {
     outline: none;
     border-color: var(--accent-primary);
-    box-shadow: 0 0 0 3px var(--accent-primary-faded);
+    box-shadow: 0 0 0 4px var(--accent-primary-faded);
 }
 
 .auth-submit-btn {
@@ -126,12 +126,11 @@
     background-color: var(--accent-primary);
     color: white;
     border: none;
-    border-radius: var(--border-radius);
+    border-radius: 12px; /* Match input radius */
     font-size: 0.95em;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.1s ease;
-    text-transform: none;
+    transition: all 0.2s ease;
     letter-spacing: -0.01em;
     margin-top: 10px;
     min-height: 44px;
@@ -155,9 +154,11 @@
 .auth-submit-btn .btn-loader {
     font-size: 1.1em;
 }
+
 .auth-submit-btn:disabled .btn-text {
     display: none;
 }
+
 .auth-submit-btn:disabled .btn-loader {
     display: inline-block;
 }
@@ -182,7 +183,7 @@
 #auth-status-message {
     margin-bottom: 20px;
     padding: 12px 15px;
-    border-radius: var(--border-radius);
+    border-radius: 12px;
     text-align: center;
     font-size: 0.9em;
     font-weight: 500;
@@ -214,7 +215,7 @@
 
 /* Right Panel: Info/Branding */
 .auth-info-panel {
-    background-color: var(--bg-tertiary); /* More subtle background */
+    background-color: var(--bg-secondary);
     color: var(--text-primary);
     display: flex;
     align-items: center;
@@ -222,7 +223,7 @@
     text-align: center;
     padding: 60px 40px;
     position: relative;
-    overflow: hidden;
+    border-left: 1px solid var(--border-color-primary);
 }
 
 .info-content {
@@ -233,25 +234,29 @@
 
 .info-header {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
 }
 
 .info-logo {
-    margin-bottom: 25px;
-    color: var(--accent-primary);
-    opacity: 0.9;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .info-header h2 {
-    font-size: 1.6em;
+    font-size: 1.4em;
     font-weight: 600;
-    margin-bottom: 15px;
-    line-height: 1.2;
+    color: var(--text-primary);
     letter-spacing: -0.02em;
+    margin: 0;
 }
 
 .info-content p {
-    font-size: 1em;
+    font-size: 0.95em;
     line-height: 1.6;
     color: var(--text-secondary);
     margin-bottom: 30px;
@@ -262,12 +267,11 @@
     padding: 0;
     margin-bottom: 40px;
     text-align: left;
-    display: inline-block;
 }
 
 .info-content ul li {
     margin-bottom: 12px;
-    font-size: 0.95em;
+    font-size: 0.9em;
     color: var(--text-secondary);
     display: flex;
     align-items: center;
@@ -276,7 +280,7 @@
 .info-content ul li i {
     margin-right: 12px;
     color: var(--accent-primary);
-    width: 18px;
+    width: 16px;
     opacity: 0.9;
 }
 
@@ -284,7 +288,6 @@
     font-size: 0.85em;
     color: var(--text-secondary);
     margin-top: auto;
-    margin-bottom: 0;
     opacity: 0.7;
 }
 
