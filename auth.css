@@ -1,0 +1,317 @@
+/* public/auth.css */
+
+/* Apply styles to the page wrapper when auth is active */
+#auth-page {
+    display: flex; /* Use flex to center the auth-wrapper */
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
+    background-color: var(--bg-primary); /* Ensure page background matches theme */
+    position: fixed; /* Cover the whole screen */
+    top: 0;
+    left: 0;
+    z-index: 2000; /* Ensure it's above the app container */
+    opacity: 0; /* Start hidden for transition */
+    pointer-events: none; /* Allow clicks through when hidden */
+    transition: opacity 0.3s ease-in-out;
+}
+
+#auth-page.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+
+.auth-wrapper {
+    display: flex;
+    width: 90%;
+    max-width: 950px; /* Max width of the entire auth box */
+    background-color: var(--bg-secondary);
+    border-radius: var(--border-radius-md); /* Slightly larger radius */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Softer, deeper shadow */
+    overflow: hidden; /* Keep panels contained */
+    border: 1px solid var(--border-color-primary);
+}
+
+.auth-panel {
+    flex: 1; /* Equal width by default */
+    padding: 50px 40px; /* Generous padding */
+}
+
+/* Left Panel: Forms */
+.auth-form-panel {
+    background-color: var(--bg-secondary); /* Match wrapper or slightly different */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center form vertically */
+}
+
+.auth-form-container {
+    width: 100%;
+    max-width: 380px; /* Limit form width for readability */
+    margin: 0 auto; /* Center form within the panel */
+}
+
+.auth-header { /* "Welcome!" */
+    text-align: center;
+    color: var(--text-primary);
+    font-size: 2em; /* Larger */
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.auth-form h3 { /* "Sign In" or "Create Account" */
+    color: var(--text-secondary); /* Subtler color */
+    font-size: 1.1em;
+    font-weight: 500;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px; /* Space between form groups */
+}
+
+.auth-form .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-form label {
+    font-size: 0.85em; /* Slightly smaller label */
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.auth-form input[type="text"],
+.auth-form input[type="password"],
+.auth-form input[type="email"] {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color-primary);
+    border-radius: var(--border-radius); /* Consistent radius */
+    color: var(--text-primary);
+    font-size: 1em;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auth-form input[type="text"]::placeholder,
+.auth-form input[type="password"]::placeholder,
+.auth-form input[type="email"]::placeholder {
+    color: var(--text-placeholder);
+    font-style: normal; /* Remove italic placeholder */
+    font-size: 0.95em;
+}
+
+.auth-form input[type="text"]:focus,
+.auth-form input[type="password"]:focus,
+.auth-form input[type="email"]:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px var(--accent-primary-faded, rgba(46, 115, 232, 0.15)); /* Subtle glow */
+}
+
+/* Shared button style */
+.auth-submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 12px 15px;
+    background-color: var(--accent-primary);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+    text-transform: none; /* Normal case */
+    letter-spacing: 0;
+    margin-top: 10px; /* Space above button */
+    min-height: 44px; /* Ensure consistent height with loader */
+}
+
+.auth-submit-btn:hover:not(:disabled) {
+    background-color: var(--accent-primary-hover);
+}
+
+.auth-submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    background-color: var(--accent-primary); /* Keep color but reduce opacity */
+}
+
+.auth-submit-btn .btn-loader {
+    font-size: 1.1em;
+}
+.auth-submit-btn:disabled .btn-text {
+    display: none;
+}
+.auth-submit-btn:disabled .btn-loader {
+    display: inline-block;
+}
+
+
+.auth-toggle-link {
+    text-align: center;
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    margin-top: 15px; /* Space above toggle link */
+}
+
+.auth-toggle-link a {
+    color: var(--accent-primary); /* Use primary accent for link */
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-toggle-link a:hover {
+    text-decoration: underline;
+}
+
+#auth-status-message {
+    margin-bottom: 20px;
+    padding: 12px 15px; /* Slightly more padding */
+    border-radius: var(--border-radius); /* Match inputs */
+    text-align: center;
+    font-size: 0.9em;
+    font-weight: 500;
+    border-width: 1px;
+    border-style: solid;
+    background-color: var(--bg-input);
+    color: var(--text-primary); /* Default text color */
+}
+
+#auth-status-message.status-error {
+    color: var(--accent-negative);
+    border-color: var(--accent-negative);
+    background-color: rgba(255, 69, 58, 0.1); /* Faded red background */
+}
+
+#auth-status-message.status-success {
+    color: var(--accent-positive);
+    border-color: var(--accent-positive);
+    background-color: rgba(48, 209, 88, 0.1); /* Faded green background */
+}
+
+#auth-status-message.status-info {
+    color: var(--accent-neutral);
+    border-color: var(--accent-neutral);
+    background-color: rgba(87, 166, 255, 0.1); /* Faded blue background */
+}
+
+#auth-status-message:empty {
+    display: none;
+}
+
+/* Right Panel: Info/Branding */
+.auth-info-panel {
+    /* Use a gradient or image for background for more visual appeal */
+    background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-primary-hover) 100%);
+    color: #ffffff; /* White text on accent background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 40px; /* More vertical padding */
+}
+
+.info-content {
+    max-width: 350px;
+}
+
+.info-logo {
+    margin-bottom: 25px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.info-content h2 {
+    font-size: 1.8em;
+    font-weight: 600;
+    margin-bottom: 15px;
+    line-height: 1.2;
+}
+
+.info-content p {
+    font-size: 1.05em;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 30px;
+}
+
+.info-content ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 40px;
+    text-align: left;
+    display: inline-block; /* Center the list block */
+}
+
+.info-content ul li {
+    margin-bottom: 12px;
+    font-size: 0.95em;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.info-content ul li i {
+    margin-right: 10px;
+    color: var(--accent-positive); /* Use success color for checkmarks */
+    width: 18px; /* Align icons */
+}
+
+.info-footer {
+    font-size: 0.85em;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: auto; /* Push to bottom if panel has extra space */
+    margin-bottom: 0;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 850px) {
+    .auth-wrapper {
+        flex-direction: column;
+        width: 95%;
+        max-width: 480px; /* Limit width on smaller screens */
+        margin: 40px auto; /* Add some margin */
+    }
+
+    .auth-panel {
+        padding: 40px 30px;
+    }
+
+    .auth-info-panel {
+       display: none; /* Hide info panel on smaller screens for simplicity */
+       /* Alternatively, stack them: */
+       /* order: -1; /* Show info panel first */
+       /* text-align: center; */
+       /* padding: 40px 30px; */
+    }
+
+     .auth-form-container {
+        max-width: none; /* Allow form to take full width of panel */
+    }
+}
+
+@media (max-width: 500px) {
+     .auth-panel {
+        padding: 30px 20px;
+    }
+     .auth-header {
+        font-size: 1.8em;
+     }
+     .auth-form h3 {
+        font-size: 1em;
+        margin-bottom: 25px;
+     }
+     .auth-submit-btn {
+        font-size: 0.95em;
+     }
+}

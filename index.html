@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Holy Grail Type Editor</title>
+
+   <!-- PWA Manifest and Theme Color -->
+   <link rel="manifest" href="/manifest.json">
+   <meta name="theme-color" content="#333333">
+
+   <!-- Apple PWA Meta Tags (Optional but recommended) -->
+   <meta name="mobile-web-app-capable" content="yes">
+   <meta name="mobile-web-app-status-bar-style" content="black-translucent">
+   <meta name="mobile-web-app-title" content="HG Editor">
+   <link rel="touch-icon" href="/icons/icon-192x192.png"> <!-- Or a specific Apple icon size -->
+
+   <link rel="stylesheet" href="style.css">
+   <link rel="stylesheet" href="/LEDR/liveEditor.css">
+   <link rel="stylesheet" href="auth.css"> <!-- Load auth.css BEFORE other component CSS that might override -->
+   <link rel="stylesheet" href="/SCMD/slashCommand.css">
+   <link rel="stylesheet" href="/SDPNL/sidebar.css">
+   <link rel="stylesheet" href="/LEDR/textStyleModal.css">
+   <link rel="stylesheet" href="/SCMD/embedPageModal.css">
+   <link rel="stylesheet" href="/SCMD/emojiModal.css">
+   <link rel="stylesheet" href="userSettingsModal.css">
+   <link rel="stylesheet" href="/LEDR/pagePeekModal.css">
+   <link rel="stylesheet" href="homePage.css">
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/turndown/7.0.0/turndown.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.js"></script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <!-- Renamed original container to auth-page and added structure -->
+    <div id="auth-page" style="display: none;"> <!-- Initially hidden, controlled by JS -->
+        <div class="auth-wrapper">
+            <!-- Left Panel: Forms -->
+            <div class="auth-panel auth-form-panel">
+                <div class="auth-form-container"> <!-- Extra container for padding/centering -->
+                    <h2 class="auth-header">Welcome!</h2> <!-- More welcoming header -->
+                    <div id="auth-status-message"></div>
+
+                    <form id="login-form" class="auth-form">
+                        <h3>Sign In</h3>
+                        <div class="form-group">
+                            <label for="login-username">Username</label>
+                            <input type="text" id="login-username" name="username" placeholder="e.g. johndoe" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <input type="password" id="login-password" name="password" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="auth-submit-btn">
+                            <span class="btn-text">Login</span>
+                            <span class="btn-loader" style="display: none;"><i class="fas fa-spinner fa-spin"></i></span>
+                        </button>
+                        <p class="auth-toggle-link">Don't have an account? <a href="#" id="show-register-link">Register here</a></p>
+                    </form>
+
+                    <form id="register-form" class="auth-form" style="display:none;">
+                         <h3>Create Account</h3>
+                        <div class="form-group">
+                            <label for="register-username">Username</label>
+                            <input type="text" id="register-username" name="username" placeholder="Choose a username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-email">Email</label>
+                            <input type="email" id="register-email" name="email" placeholder="e.g. user@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-password">Password</label>
+                            <input type="password" id="register-password" name="password" placeholder="At least 8 characters" required>
+                        </div>
+                         <button type="submit" class="auth-submit-btn">
+                            <span class="btn-text">Register</span>
+                            <span class="btn-loader" style="display: none;"><i class="fas fa-spinner fa-spin"></i></span>
+                        </button>
+                        <p class="auth-toggle-link">Already have an account? <a href="#" id="show-login-link">Login here</a></p>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right Panel: Info/Branding -->
+            <div class="auth-panel auth-info-panel">
+                <div class="info-content">
+                    <!-- Replace with your actual logo -->
+                    <i class="fas fa-feather-alt fa-3x info-logo"></i> 
+                    <h2>Holy Grail Editor</h2>
+                    <p>Your collaborative space for ideas, notes, and projects.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Real-time Editing</li>
+                        <li><i class="fas fa-check"></i> Powerful Slash Commands</li>
+                        <li><i class="fas fa-check"></i> Flexible Page Structure</li>
+                    </ul>
+                    <p class="info-footer">© 2024 Your Company</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <div id="app-container" class="container" style="display:none;">
+        <!-- Rest of your app container remains the same -->
+        <div class="container">
+            <aside class="sidebar">
+                 <!-- User profile area will be adjusted by userSettings.js potentially -->
+                 <div id="user-profile-area-container"> 
+                     <div id="user-profile-area" style="display: flex; align-items: center; justify-content: space-between; padding: 10px;">
+                         <span id="logged-in-user" style="font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex-grow: 1; margin-right: 10px;"></span>
+                         <div>
+                             <button id="user-settings-btn" title="User Settings" class="sidebar-icon-btn"><i class="fas fa-cog"></i></button>
+                             <button id="logout-btn" title="Logout" class="sidebar-icon-btn" style="margin-left: 5px;"><i class="fas fa-sign-out-alt"></i></button>
+                         </div>
+                     </div>
+                 </div>
+                <!-- Home button will be inserted here by JS -->
+                
+                <!-- Announcements Section -->
+                <div id="announcements-section-header" class="sidebar-section">
+                    <!-- "Announcements" H2 will go here -->
+                </div>
+                <div id="announcements-content-area" class="sidebar-content">
+                    <!-- Announcement list and page trees will be populated here -->
+                </div>
+
+                <!-- Projects Section -->
+                <div id="projects-section-header" class="sidebar-section-header">
+                    <!-- H2 with actions will go here -->
+                </div>
+                <div id="pageTreeContainer" class="sidebar-content-area">
+                    <!-- Project list and page trees will be populated here -->
+                </div>
+            </aside>
+            <main class="editor-area">
+                <button id="sidebar-toggle-btn" class="sidebar-toggle-button" title="Collapse Sidebar">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="editor-top-bar">
+                    <h4 id="current-page-display">No page selected</h4>
+                    <div class="editor-top-bar-actions">
+                        <p id="status-message"></p>
+                        <button id="save-page-btn" disabled><i class="fas fa-save"></i></button>
+                        <button id="more-options-btn" title="More options"><i class="fas fa-ellipsis-h"></i></button>
+                    </div>
+                </div>
+                <div class="editor-panes">
+                    <div id="live-editor" contenteditable="true" class="pane" data-placeholder="Write here... Type '/' for commands."></div>
+                </div>
+            </main>
+        </div>
+   </div>
+
+   <!-- Slash Command Modal -->
+   <div id="slash-command-modal" style="display:none;">
+       <!-- Content populated by slashCommand.js -->
+   </div>
+
+   <!-- Contextual Actions Modal -->
+   <div id="actions-modal" class="modal" style="display:none;">
+       <div class="modal-content">
+           <ul id="actions-modal-list">
+               <!-- Actions will be populated here by JS -->
+           </ul>
+       </div>
+   </div>
+
+   <!-- Text Styling Modal -->
+   <div id="text-style-modal" class="text-style-modal" style="display:none;">
+       <button data-command="bold" title="Bold (Ctrl+B)"><i class="fas fa-bold"></i></button>
+       <button data-command="italic" title="Italic (Ctrl+I)"><i class="fas fa-italic"></i></button>
+       <button data-command="underline" title="Underline (Ctrl+U)"><i class="fas fa-underline"></i></button>
+       <button data-command="strikeThrough" title="Strikethrough"><i class="fas fa-strikethrough"></i></button>
+       <button data-command="createLink" title="Create/Edit Link"><i class="fas fa-link"></i></button>
+   </div>
+   <!-- More Options Modal -->
+   <div id="more-options-modal" class="more-options-modal" style="display:none;">
+       <ul id="more-options-list">
+           <li class="more-options-item more-options-font-item">
+               <span class="more-options-label">Font</span>
+               <div class="font-options-placeholder">
+                   <div class="font-placeholder-btn active">Aa</div>
+                   <div class="font-placeholder-btn">Aa</div>
+                   <div class="font-placeholder-btn">Aa</div>
+               </div>
+           </li>
+           <li class="more-options-item" data-action="toggle-full-width">
+               <span class="more-options-label">Full Width</span>
+               <i class="fas fa-arrows-alt-h editor-option-icon-right"></i>
+           </li>
+           <li class="more-options-item" data-action="import-page">
+               <i class="fas fa-file-import"></i>
+               <span class="more-options-label">Import</span>
+           </li>
+           <li class="more-options-item" data-action="export-page">
+               <i class="fas fa-file-export"></i>
+               <span class="more-options-label">Export</span>
+           </li>
+           <li class="more-options-item" data-action="export-page">
+               <i class="fas fa-file-export"></i>
+               <span class="more-options-label">Export</span>
+           </li>
+           <li class="more-options-item" data-action="peek-page">
+               <i class="fas fa-clone"></i>
+               <span class="more-options-label">Peek Page</span>
+           </li>
+       </ul>
+   </div>
+
+   <!-- Embed Page Modal will be dynamically created by embedPageModal.js -->
+   <!-- Emoji Modal will be dynamically created by emojiModal.js -->
+   
+   <script type="module" src="main.js"></script>
+</body>
+</html>
